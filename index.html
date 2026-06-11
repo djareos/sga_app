@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Banco Falabella"/>
 <title>Banco Falabella</title>
-<link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="manifest" href="/sga_app/manifest.json"/>
+<link rel="apple-touch-icon" href="/sga_app/apple-touch-icon.png"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:-apple-system,'Helvetica Neue',Roboto,sans-serif;}
 :root{
@@ -1213,7 +1213,7 @@ window.addEventListener('load',()=>{
     document.getElementById('login').classList.add('active');
   },2000);
 });
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sga_app/sw.js').catch(()=>{});
 </script>
 </body>
 </html>
