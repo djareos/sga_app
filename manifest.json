@@ -2,27 +2,27 @@
   "name": "Banco Falabella",
   "short_name": "Falabella",
   "description": "App móvil Banco Falabella Perú",
-  "start_url": "/sga_app/index.html",
-  "scope": "/sga_app/",
+  "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007932",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/sga_app/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/sga_app/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/sga_app/apple-touch-icon.png",
+      "src": "apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     }
