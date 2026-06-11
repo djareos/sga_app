@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#3a8c3f"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Banco Falabella"/>
+<title>Banco Falabella</title>
+<link rel="manifest" href="manifest.json"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:-apple-system,'Helvetica Neue',Roboto,sans-serif;}
+:root{
+  --g:#3a8c3f; --gd:#2d6e32; --gl:#e8f5e9; --gb:#f0faf0;
+  --gray:#6b7280; --gray2:#4b5563; --gray3:#374151;
+  --bg:#f5f6f7; --white:#fff; --text:#1a1a1a; --mid:#555; --lt:#888;
+  --border:#e5e7eb; --red:#e53935;
+  --brown:#5c3d2e;
+}
+html,body{height:100%;overflow:hidden;background:#fff;}
+#app{height:100dvh;overflow:hidden;position:relative;max-width:430px;margin:0 auto;background:#fff;}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;background:#fff;}
+.screen.active{display:flex;}
+@keyframes sIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+.screen.active{animation:sIn .2s ease;}
+.sb{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.sb::-webkit-scrollbar{display:none;}
+
+/* ── LOGO SVG ─────────────────────────────────────── */
+.logo-svg{display:inline-block;vertical-align:middle;}
+
+/* ── SPLASH ──────────────────────────────────────── */
+#splash{background:#fff;align-items:center;justify-content:center;}
+#splash .ver{position:absolute;bottom:44px;font-size:13px;color:#aaa;}
+
+/* ── LOGIN ───────────────────────────────────────── */
+#login{justify-content:space-between;}
+.login-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px 16px;}
+.login-body .greeting{font-size:19px;color:#444;margin:28px 0 18px;}
+.login-body .greeting b{color:#111;font-weight:700;}
+.btn-g{display:block;width:100%;background:var(--g);color:#fff;border:none;border-radius:50px;padding:15px;font-size:17px;font-weight:600;cursor:pointer;text-align:center;}
+.btn-g:active{filter:brightness(.9);}
+.login-links{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:18px;}
+.login-links a{color:var(--g);font-size:15px;text-decoration:none;}
+.login-quick{padding:16px 16px 32px;border-top:1px solid #f0f0f0;}
+.lq-dots{display:flex;justify-content:center;gap:6px;margin-bottom:14px;}
+.lq-dot{width:8px;height:8px;border-radius:50%;background:#ccc;}
+.lq-dot.on{background:var(--g);}
+.lq-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.lq-item{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;}
+.lq-box{width:60px;height:60px;border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;}
+.lq-lbl{font-size:11px;color:var(--lt);text-align:center;line-height:1.3;}
+
+/* ── TOP NAV ─────────────────────────────────────── */
+.tnav{background:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0f0f0;z-index:9;}
+.tnav-pts{background:#efefef;border-radius:50px;padding:6px 10px 6px 7px;display:flex;align-items:center;gap:6px;cursor:pointer;}
+.tnav-star{width:27px;height:27px;background:#6b6b6b;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.tnav-ptslbl{font-size:10px;color:var(--lt);line-height:1.2;}
+.tnav-ptsval{font-size:15px;font-weight:700;color:#111;}
+.tnav-eye{width:40px;height:40px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ── PRODUCT CARDS (split: gray header + white body) */
+.cards-row{display:flex;gap:10px;padding:14px 14px 6px;overflow-x:auto;scrollbar-width:none;}
+.cards-row::-webkit-scrollbar{display:none;}
+.pcard{min-width:200px;border-radius:16px;background:#fff;border:1px solid #e8e9eb;box-shadow:0 2px 8px rgba(0,0,0,.09);overflow:hidden;flex-shrink:0;cursor:pointer;}
+/* gray header */
+.pch{padding:11px 13px 10px;display:flex;justify-content:space-between;align-items:flex-start;}
+.pch-visa{background:#7c8490;}
+.pch-cuenta{background:#6b7280;}
+.pch-prestamo{background:#596070;}
+.pch-l{display:flex;flex-direction:column;gap:3px;}
+.pch-type{font-size:10px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.6px;text-transform:uppercase;}
+.pch-num{font-size:13px;color:#fff;font-weight:500;}
+.pch-visa-logo{font-style:italic;font-weight:900;font-size:15px;letter-spacing:-1px;color:#fff;}
+.pch-cmr{background:#fff;color:#2a2a2a;font-size:8px;font-weight:700;padding:3px 5px;border-radius:3px;line-height:1.5;text-align:center;}
+.pch-home{color:rgba(255,255,255,.75);}
+/* white body */
+.pcb{padding:13px 14px 15px;background:#fff;}
+.pcb-lbl{font-size:13px;color:#444;margin-bottom:3px;}
+.pcb-lbl.green{color:var(--g);font-weight:600;}
+.pcb-amt{font-size:25px;font-weight:700;color:#111;letter-spacing:-.4px;line-height:1.1;}
+.pcb-amt.green{color:var(--g);}
+.pcb-amt.sm{font-size:19px;}
+.pcb-bar{height:5px;background:#e5e7eb;border-radius:3px;margin:9px 0 11px;}
+.pcb-bar-fill{height:100%;background:var(--g);border-radius:3px;}
+/* abrir cuenta */
+.pcard-abrir{background:#fff;border:1px solid #cce8cc;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:155px;padding:16px 12px;cursor:pointer;}
+.abrir-circle{width:44px;height:44px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.abrir-txt{font-size:12px;color:#444;text-align:center;line-height:1.4;}
+.abrir-cost{font-size:14px;font-weight:700;color:var(--gd);}
+.abrir-btn{background:var(--g);color:#fff;border:none;border-radius:50px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;}
+
+/* ── QUICK ACTIONS ───────────────────────────────── */
+.qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px 14px 14px;}
+.qa-item{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;}
+.qa-circle{width:55px;height:55px;border-radius:50%;background:var(--bg);border:1px solid #ebebeb;display:flex;align-items:center;justify-content:center;}
+.qa-lbl{font-size:11px;color:var(--lt);text-align:center;line-height:1.3;}
+
+/* ── SECTION HEADER ──────────────────────────────── */
+.sechdr{display:flex;justify-content:space-between;align-items:center;padding:6px 14px 10px;}
+.sechdr-title{font-size:17px;font-weight:700;color:#111;}
+.sechdr-btn{border:1.5px solid var(--border);border-radius:50px;padding:6px 15px;font-size:13px;color:#111;cursor:pointer;background:#fff;}
+.div8{height:8px;background:#f3f4f5;}
+
+/* ── OFFER CARDS ─────────────────────────────────── */
+.orow{display:flex;gap:10px;padding:0 14px 14px;overflow-x:auto;scrollbar-width:none;}
+.orow::-webkit-scrollbar{display:none;}
+.ocard{min-width:182px;background:#fff;border:1px solid var(--border);border-radius:15px;overflow:hidden;flex-shrink:0;cursor:pointer;}
+.ocard-img{height:105px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.ocard-body{padding:10px 12px 12px;}
+.ocard-title{font-size:14px;font-weight:700;color:#111;margin-bottom:6px;}
+.badge-g{background:var(--g);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px;}
+.badge-r{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:5px;text-transform:uppercase;}
+.ocard-desc{font-size:12px;color:var(--lt);margin-bottom:7px;}
+.ocard-date{border:1.5px solid var(--border);border-radius:50px;font-size:11px;padding:3px 11px;color:#555;display:inline-block;font-weight:500;}
+
+/* ── BOTTOM NAV ──────────────────────────────────── */
+.bnav{background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 64px 1fr 1fr;align-items:end;padding:6px 0 22px;}
+.bn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px;}
+.bn-ic{width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.bn-lbl{font-size:10px;color:var(--lt);}
+.bn-mid{display:flex;justify-content:center;align-items:flex-end;padding-bottom:2px;}
+.qrbtn{width:56px;height:56px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(50,170,60,.45);cursor:pointer;}
+
+/* ── BACK HEADER ─────────────────────────────────── */
+.bhdr{display:flex;align-items:center;padding:13px 14px;position:sticky;top:0;z-index:9;border-bottom:1px solid #f0f0f0;}
+.bhdr.dk{background:var(--brown);border-color:#6b4c3a;}
+.bhdr.dk2{background:var(--gray3);border-color:#4b5563;}
+.bhdr.wh{background:#fff;}
+.back{background:none;border:none;cursor:pointer;font-size:26px;line-height:1;padding:0 8px 0 0;color:#111;}
+.back.wh{color:#fff;}
+.bhdr-title{flex:1;font-size:17px;font-weight:700;text-align:center;color:#111;}
+.bhdr-title.wh{color:#fff;}
+.bhdr-r{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--lt);cursor:pointer;}
+.bhdr-r.wh{color:rgba(255,255,255,.65);}
+
+/* ── TARJETA CMR ─────────────────────────────────── */
+.card-hero{background:var(--brown);padding:16px 16px 0;}
+.cmr-card{background:linear-gradient(160deg,#8a9099,#5e6673);border-radius:18px;padding:17px 18px;color:#fff;position:relative;}
+.cmr-card-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;}
+.cmr-cmr{display:flex;flex-direction:column;}
+.cmr-cmr-txt{font-size:16px;font-weight:800;color:#fff;letter-spacing:.5px;}
+.cmr-cmr-sub{font-size:9px;color:rgba(255,255,255,.75);}
+.mostrar-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:50px;padding:6px 14px;font-size:12px;cursor:pointer;}
+.cmr-num{font-size:16px;letter-spacing:4px;opacity:.9;margin-bottom:15px;}
+.cmr-card-row3{display:flex;justify-content:space-between;align-items:flex-end;}
+.cmr-field-lbl{font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.5px;}
+.cmr-field-val{font-size:12px;letter-spacing:1px;margin-top:2px;}
+.cmr-name{font-size:13px;font-weight:600;margin-top:6px;opacity:.92;}
+.cmr-visa{font-style:italic;font-weight:900;font-size:24px;letter-spacing:-1px;}
+/* card actions dark bg */
+.card-actions-bg{background:var(--brown);padding:0 12px 16px;}
+.ca-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.ca-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;}
+.ca-circle{width:52px;height:52px;border-radius:50%;background:#7a5a4a;display:flex;align-items:center;justify-content:center;position:relative;}
+.ca-dot{position:absolute;top:-1px;right:-1px;width:11px;height:11px;background:#aadd55;border-radius:50%;border:2px solid var(--brown);}
+.ca-lbl{font-size:10px;color:rgba(255,255,255,.8);text-align:center;line-height:1.3;}
+/* balance row white */
+.bal-row{display:flex;justify-content:space-between;padding:16px 16px 10px;background:#fff;}
+.bal-col{}
+.bal-col-lbl{font-size:13px;color:var(--lt);}
+.bal-col-val{font-size:22px;font-weight:700;color:#111;}
+.bal-bar{height:6px;background:#e8e8e8;border-radius:3px;margin:0 16px 0;}
+.bal-bar-fill{height:100%;background:var(--g);border-radius:3px;}
+.drag-handle{width:36px;height:4px;background:#ddd;border-radius:2px;margin:10px auto;}
+/* tabs */
+.tabs-row{display:flex;border-bottom:2px solid #ebebeb;margin:12px 14px 0;}
+.tab{flex:1;text-align:center;padding:11px 4px;font-size:13px;font-weight:600;color:var(--lt);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--gd);border-bottom-color:var(--gd);}
+/* movimientos */
+.movs{padding:0 14px;}
+.mov-dg{font-size:13px;font-weight:700;color:#111;padding:12px 0 6px;}
+.mov-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f3f3f3;cursor:pointer;}
+.mov-left{}
+.mov-desc{font-size:14px;font-weight:500;color:#111;}
+.mov-sub{font-size:11px;color:var(--lt);margin-top:2px;display:flex;align-items:center;gap:4px;}
+.mov-sub-pencil{color:var(--g);font-size:11px;}
+.mov-right{display:flex;align-items:center;gap:4px;}
+.mov-amt{font-size:15px;font-weight:700;}
+.mov-amt.g{color:var(--g);}
+.mov-amt.k{color:#111;}
+.mov-chevron{color:#bbb;font-size:14px;}
+.fact-bar{background:#f0f0f0;padding:8px 14px;font-size:11px;font-weight:700;color:var(--lt);text-transform:uppercase;letter-spacing:.5px;}
+.mov-periodo{display:flex;justify-content:space-between;padding:10px 0 4px;font-size:13px;color:var(--lt);}
+.mov-periodo strong{color:#111;}
+
+/* ── CTA CUENTA ─────────────────────────────────── */
+.cuenta-top{padding:18px 16px 12px;}
+.cuenta-main-amt{font-size:30px;font-weight:700;color:#111;}
+.cuenta-main-lbl{font-size:13px;color:var(--lt);margin-top:2px;}
+.cuenta-2col{display:flex;gap:24px;padding:0 16px 14px;}
+.c2-lbl{font-size:12px;color:var(--lt);}
+.c2-val{font-size:14px;font-weight:600;color:#111;margin-top:2px;}
+.cci-block{margin:0 14px 14px;background:#f5f5f5;border-radius:12px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;}
+.cci-lbl{font-size:13px;color:var(--lt);}
+.cci-val{font-size:12.5px;font-weight:600;color:#111;}
+.mov-section-hdr{background:#efefef;padding:8px 14px;font-size:11px;font-weight:700;color:var(--lt);letter-spacing:.5px;text-transform:uppercase;}
+/* cuenta movimiento row */
+.mc-row{display:flex;align-items:flex-start;padding:13px 14px;border-bottom:1px solid #f5f5f5;cursor:pointer;}
+.mc-date{min-width:38px;text-align:center;}
+.mc-day{font-size:19px;font-weight:700;line-height:1;color:#111;}
+.mc-month{font-size:10px;color:var(--lt);}
+.mc-divider{width:1px;background:#e5e5e5;margin:0 13px;align-self:stretch;}
+.mc-desc{flex:1;}
+.mc-title{font-size:14px;font-weight:600;}
+.mc-title.g{color:var(--gd);}
+.mc-title.k{color:#111;}
+.mc-sub{font-size:11px;color:var(--lt);margin-top:2px;}
+.mc-amt{font-size:14px;font-weight:700;margin-left:6px;white-space:nowrap;}
+.mc-amt.g{color:var(--gd);}
+.mc-amt.k{color:#111;}
+
+/* ── PRÉSTAMO ─────────────────────────────────────── */
+.pre-card{background:linear-gradient(135deg,#596070,#2a313e);margin:14px;border-radius:18px;padding:18px;color:#fff;}
+.pre-type{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.6px;}
+.pre-num{font-size:13px;opacity:.82;margin:3px 0 14px;}
+.pre-2col{display:flex;justify-content:space-between;}
+.pre-col-lbl{font-size:11px;opacity:.65;}
+.pre-col-val{font-size:20px;font-weight:700;margin-top:3px;}
+.pre-col-val.sm{font-size:17px;}
+/* status box green */
+.pre-status{background:var(--gl);border-radius:14px;margin:0 14px 12px;padding:13px 14px;}
+.pre-srow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.05);}
+.pre-srow:last-child{border-bottom:none;}
+.pre-slbl{font-size:13px;color:var(--lt);}
+.pre-sval{font-size:13px;font-weight:600;color:#111;}
+/* action grid */
+.pre-act{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 12px;}
+.pa-btn{border:1.5px solid var(--border);border-radius:13px;padding:13px;display:flex;align-items:center;gap:10px;cursor:pointer;background:#fff;}
+.pa-ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;}
+.pa-txt{font-size:13px;font-weight:600;color:#111;}
+/* detail list */
+.pre-detail{padding:0 14px 24px;}
+.pdrow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f3f3f3;}
+.pdrow:last-child{border-bottom:none;}
+.pd-lbl{font-size:13px;color:var(--lt);}
+.pd-val{font-size:13px;font-weight:600;color:#111;}
+
+/* ── PAGAR CMR ───────────────────────────────────── */
+.pc-periodo{background:#f5f5f5;margin:14px;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.pc-per-txt{font-size:13px;color:var(--lt);line-height:1.6;}
+.pc-per-txt strong{color:#111;display:block;}
+.po{margin:0 14px 10px;border:1.5px solid var(--border);border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;}
+.po.on{border-color:var(--g);background:#f0faf0;}
+.po-lbl{font-size:15px;font-weight:600;color:#111;}
+.po-val{font-size:17px;font-weight:700;color:var(--gd);}
+.po-desc{font-size:12px;color:var(--lt);margin-top:3px;}
+
+/* ── PAGAR MI CRÉDITO ────────────────────────────── */
+.prc-top{background:var(--brown);padding:18px 16px 20px;color:#fff;text-align:center;flex-shrink:0;}
+.prc-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.prc-topbar-title{font-size:18px;font-weight:700;}
+.prc-topbar-x{background:none;border:none;color:rgba(255,255,255,.8);font-size:22px;cursor:pointer;}
+.prc-bag{width:68px;height:68px;background:rgba(0,0,0,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.prc-monto{font-size:38px;font-weight:700;}
+.prc-monto-lbl{font-size:14px;opacity:.65;margin-top:4px;}
+.prc-body{padding:14px 14px;}
+.prc-info{background:#f8f8f8;border-radius:12px;padding:13px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;}
+.prc-info-i{font-size:15px;flex-shrink:0;margin-top:1px;}
+.prc-info-txt{font-size:13px;color:#111;line-height:1.6;}
+.prc-rows{margin-bottom:14px;}
+.prc-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f3f3f3;}
+.prc-row:last-child{border-bottom:none;}
+.prc-lbl{font-size:13px;color:var(--lt);}
+.prc-val{font-size:13px;font-weight:600;color:#111;}
+.prc-val.g{color:var(--gd);}
+/* source selector */
+.prc-source{border:1.5px solid var(--g);border-radius:12px;padding:13px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.prc-src-name{font-size:14px;font-weight:700;color:var(--gd);}
+.prc-src-sub{font-size:12px;color:var(--lt);margin-top:2px;}
+
+/* ── TRANSFERIR ──────────────────────────────────── */
+.tr-body{padding:18px 14px;}
+.tr-amtbox{background:var(--gl);border-radius:16px;padding:18px;text-align:center;margin-bottom:18px;}
+.tr-amt-val{font-size:34px;font-weight:700;color:var(--gd);}
+.tr-amt-lbl{font-size:13px;color:var(--lt);margin-top:3px;}
+.tr-field{margin-bottom:15px;}
+.tr-field label{display:block;font-size:13px;color:var(--lt);font-weight:500;margin-bottom:6px;}
+.tr-field input,.tr-field select{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:13px 14px;font-size:15px;outline:none;background:#fff;color:#111;}
+.tr-field input:focus,.tr-field select:focus{border-color:var(--g);}
+
+/* ── CMR PUNTOS ──────────────────────────────────── */
+.cmrp-hero{background:var(--brown);padding:26px 16px;text-align:center;color:#fff;}
+/* ── NOTIFICACIONES ──────────────────────────────── */
+.ni{display:flex;padding:14px;border-bottom:1px solid #f3f3f3;gap:11px;cursor:pointer;}
+.ni-dot{width:10px;height:10px;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:4px;}
+.ni-dot.r{background:#ddd;}
+.ni-title{font-size:14px;font-weight:600;color:#111;}
+.ni-desc{font-size:13px;color:var(--lt);margin-top:3px;line-height:1.4;}
+.ni-time{font-size:11px;color:#aaa;margin-top:5px;}
+/* ── MÁS ─────────────────────────────────────────── */
+.mi{display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;}
+.mi-ic{width:44px;height:44px;border-radius:50%;background:#f3f4f5;display:flex;align-items:center;justify-content:center;margin-right:13px;flex-shrink:0;}
+.mi-t{flex:1;}
+.mi-title{font-size:15px;font-weight:600;color:#111;}
+.mi-sub{font-size:12px;color:var(--lt);margin-top:2px;}
+.mi-arr{color:#ccc;font-size:17px;}
+
+/* ── UTILS ───────────────────────────────────────── */
+.btn-g-full{display:block;width:100%;background:var(--g);color:#fff;border:none;border-radius:50px;padding:15px;font-size:16px;font-weight:600;cursor:pointer;text-align:center;}
+.btn-g-full:active{filter:brightness(.9);}
+.padbtm{padding:0 14px 14px;}
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.9);color:#fff;padding:10px 20px;border-radius:50px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:90%;}
+.toast.on{opacity:1;}
+.sh{}/* saldo oculto */
+</style>
+</head>
+<body>
+<div id="app">
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════ SPLASH ════════════════ -->
+<div class="screen active" id="splash">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <svg class="logo-svg" width="60" height="58" viewBox="0 0 60 68">
+      <ellipse cx="31" cy="20" rx="17" ry="13" fill="#c3d600" transform="rotate(18 31 20)"/>
+      <ellipse cx="27" cy="46" rx="24" ry="17" fill="#007932" transform="rotate(-12 27 46)"/>
+    </svg>
+    <div style="line-height:1.2;">
+      <div style="font-size:24px;font-weight:700;color:#555;">Banco</div>
+      <div style="font-size:24px;font-weight:700;color:#555;">Falabella</div>
+    </div>
+  </div>
+  <div class="ver">2.78.0</div>
+</div>
+
+<!-- ═══════════════ LOGIN ════════════════ -->
+<div class="screen" id="login">
+  <div class="login-body">
+    <div style="display:flex;align-items:center;gap:13px;">
+      <svg class="logo-svg" width="58" height="56" viewBox="0 0 60 68">
+        <ellipse cx="31" cy="20" rx="17" ry="13" fill="#c3d600" transform="rotate(18 31 20)"/>
+        <ellipse cx="27" cy="46" rx="24" ry="17" fill="#007932" transform="rotate(-12 27 46)"/>
+      </svg>
+      <div style="line-height:1.2;">
+        <div style="font-size:22px;font-weight:700;color:#555;">Banco</div>
+        <div style="font-size:22px;font-weight:700;color:#555;">Falabella</div>
+      </div>
+    </div>
+    <div class="greeting">Hola <b>Pedro</b></div>
+    <button class="btn-g" onclick="doLogin()">Entrar</button>
+    <div class="login-links">
+      <a href="#" onclick="showT('Cambiar clave');return false;">Cambia tu Clave Internet</a>
+      <a href="#" onclick="showT('No soy Pedro');return false;">No soy Pedro</a>
+    </div>
+  </div>
+  <div class="login-quick">
+    <div class="lq-dots"><div class="lq-dot on"></div><div class="lq-dot"></div></div>
+    <div class="lq-row">
+      <div class="lq-item" onclick="showT('Token Móvil')">
+        <div class="lq-box">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="7.5" cy="15.5" r="4.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5l2 2L21 6l-2-2"/>
+          </svg>
+        </div>
+        <div class="lq-lbl">Token Móvil</div>
+      </div>
+      <div class="lq-item" onclick="showT('Yapear/Plinear')">
+        <div class="lq-box">
+          <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.7" stroke-linecap="round">
+            <rect x="5" y="2" width="14" height="20" rx="2.5"/>
+            <path d="M9 7h3M9 11h5"/><circle cx="15" cy="7.5" r="2" fill="#777" stroke="none"/>
+            <path d="M8 15h2M8 17.5h3"/>
+          </svg>
+        </div>
+        <div class="lq-lbl">Yapear / Plinear</div>
+      </div>
+      <div class="lq-item" onclick="showT('Paga con QR')">
+        <div class="lq-box">
+          <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.8" stroke-linecap="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="3.8" y="3.8" width="5.4" height="5.4" rx=".5" fill="#777" stroke="none"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14.8" y="3.8" width="5.4" height="5.4" rx=".5" fill="#777" stroke="none"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="3.8" y="14.8" width="5.4" height="5.4" rx=".5" fill="#777" stroke="none"/>
+            <rect x="14" y="14" width="2.5" height="2.5" fill="#777" stroke="none"/><rect x="18.5" y="14" width="2.5" height="2.5" fill="#777" stroke="none"/>
+            <rect x="14" y="18.5" width="2.5" height="2.5" fill="#777" stroke="none"/><rect x="18.5" y="18.5" width="2.5" height="2.5" fill="#777" stroke="none"/>
+          </svg>
+        </div>
+        <div class="lq-lbl">Paga con QR</div>
+      </div>
+      <div class="lq-item" onclick="showT('Promociones')">
+        <div class="lq-box" style="background:#fff3f3;">
+          <svg width="30" height="30" viewBox="0 0 36 36">
+            <path d="M18 3 L32 15 L28 33 L8 33 L4 15 Z" fill="#e53935"/>
+            <text x="18" y="22" text-anchor="middle" fill="#fff" font-size="7" font-weight="700" font-family="sans-serif">única</text>
+          </svg>
+        </div>
+        <div class="lq-lbl">Promociones</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HOME ════════════════ -->
+<div class="screen" id="home">
+  <!-- TOP NAV -->
+  <div class="tnav">
+    <div onclick="goTo('cmrpuntos')" style="cursor:pointer;">
+      <svg width="34" height="32" viewBox="0 0 60 68">
+        <ellipse cx="31" cy="20" rx="17" ry="13" fill="#c3d600" transform="rotate(18 31 20)"/>
+        <ellipse cx="27" cy="46" rx="24" ry="17" fill="#007932" transform="rotate(-12 27 46)"/>
+      </svg>
+    </div>
+    <div class="tnav-pts" onclick="goTo('cmrpuntos')">
+      <div class="tnav-star">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      </div>
+      <div>
+        <div><span class="tnav-ptsval">2.972 </span><span class="tnav-ptslbl">CMR<br>puntos</span></div>
+      </div>
+      <span style="font-size:14px;color:#888;margin-left:2px;">›</span>
+    </div>
+    <div class="tnav-eye" onclick="toggleS()">
+      <svg id="eye-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="sb">
+    <!-- PRODUCT CARDS -->
+    <div class="cards-row">
+      <!-- CMR VISA -->
+      <div class="pcard" onclick="goTo('tarjeta')">
+        <div class="pch pch-visa">
+          <div class="pch-l">
+            <div class="pch-visa-logo">VISA</div>
+            <div class="pch-num">•••• 1901</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;padding-top:2px;">
+            <div class="pch-cmr">CMR<br><span style="font-weight:400;font-size:7px;">Falabella</span></div>
+            <div style="font-style:italic;font-weight:900;font-size:15px;color:#fff;letter-spacing:-1px;">VISA</div>
+          </div>
+        </div>
+        <div class="pcb">
+          <div class="pcb-lbl">Linea disponible</div>
+          <div class="pcb-amt sh">S/6,722.56</div>
+          <div class="pcb-bar"><div class="pcb-bar-fill" style="width:61%"></div></div>
+          <div class="pcb-lbl green">Has utilizado</div>
+          <div class="pcb-amt green sh">S/10,277.44</div>
+        </div>
+      </div>
+      <!-- CUENTA -->
+      <div class="pcard" onclick="goTo('cuenta')">
+        <div class="pch pch-cuenta">
+          <div class="pch-l">
+            <div class="pch-type">CTA BANCO FALABEL...</div>
+            <div class="pch-num">828280286547</div>
+          </div>
+          <div class="pch-home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.72)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pcb" style="padding-top:20px;">
+          <div class="pcb-lbl">Tienes en tu cuenta</div>
+          <div class="pcb-amt sh">S/2,087.95</div>
+        </div>
+      </div>
+      <!-- PRÉSTAMO -->
+      <div class="pcard" onclick="goTo('prestamo')">
+        <div class="pch pch-prestamo">
+          <div class="pch-l">
+            <div class="pch-type">PRÉSTAMO EFECTIVO</div>
+            <div class="pch-num">208885304637</div>
+          </div>
+        </div>
+        <div class="pcb">
+          <div class="pcb-lbl">Fecha de pago</div>
+          <div class="pcb-amt sm">15/06/2026</div>
+          <div class="pcb-lbl" style="margin-top:12px;">Monto que solicitaste</div>
+          <div class="pcb-amt sh">S/67,100.00</div>
+        </div>
+      </div>
+      <!-- ABRIR CUENTA -->
+      <div class="pcard pcard-abrir" onclick="showT('Abre tu cuenta')">
+        <div class="abrir-circle">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#007932" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+        <div class="abrir-txt">Abre aquí tu<br>Cuenta de ahorro</div>
+        <div class="abrir-cost">Costo S/0</div>
+        <button class="abrir-btn">Abrir Cuenta</button>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="qa-row">
+      <!-- Yapea / Plinea -->
+      <div class="qa-item" onclick="goTo('transferir')">
+        <div class="qa-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.6" stroke-linecap="round">
+            <rect x="5" y="2" width="14" height="20" rx="2.5"/>
+            <path d="M8.5 6.5h4M8.5 9.5h5.5"/>
+            <circle cx="15" cy="6.8" r="1.8" fill="#555" stroke="none"/>
+            <path d="M8 14.5h2.5M8 17h3.5"/>
+          </svg>
+        </div>
+        <div class="qa-lbl">Yapea / Plinea</div>
+      </div>
+      <!-- Paga tus servicios -->
+      <div class="qa-item" onclick="showT('Paga tus servicios')">
+        <div class="qa-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.6" stroke-linecap="round">
+            <rect x="2" y="4" width="20" height="16" rx="2.5"/>
+            <path d="M2 9h20"/>
+            <rect x="14.5" y="13" width="4" height="3" rx="1" fill="#555" stroke="none"/>
+            <path d="M5 13h6"/>
+          </svg>
+        </div>
+        <div class="qa-lbl">Paga tus servicios</div>
+      </div>
+      <!-- Configura tu tarjeta -->
+      <div class="qa-item" onclick="showT('Configura tu tarjeta')">
+        <div class="qa-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.6" stroke-linecap="round">
+            <rect x="2" y="5" width="20" height="14" rx="2.5"/>
+            <path d="M2 10h20"/>
+            <circle cx="16" cy="15.5" r="2.8" stroke="#555"/>
+            <path d="M16 12.7v-.5M16 18.3v-.5M13.2 15.5h-.5M19.3 15.5h.5M14.2 13.5l-.35-.35M18.15 17.45l-.35-.35M14.2 17.5l-.35.35M18.15 13.55l-.35.35"/>
+          </svg>
+        </div>
+        <div class="qa-lbl">Configura tu tarjeta</div>
+      </div>
+      <!-- Recibe tu sueldo -->
+      <div class="qa-item" onclick="showT('Recibe tu sueldo')">
+        <div class="qa-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="10" cy="7" r="3.5"/>
+            <path d="M2 19.5c0-3.6 3.6-5.5 8-5.5"/>
+            <path d="M15 14l4 4M19 14l-4 4"/>
+            <circle cx="19" cy="18" r=".1" fill="#555"/>
+          </svg>
+        </div>
+        <div class="qa-lbl">Recibe tu sueldo</div>
+      </div>
+    </div>
+
+    <div class="div8"></div>
+
+    <!-- MIS OFERTAS -->
+    <div class="sechdr" style="padding-top:14px;">
+      <div class="sechdr-title">Mis Ofertas</div>
+      <div class="sechdr-btn" onclick="showT('Todas las ofertas')">Revisar todos</div>
+    </div>
+    <div class="orow">
+      <!-- Baja tu cuota -->
+      <div class="ocard" onclick="showT('¡Baja tu cuota!')">
+        <div class="ocard-img">
+          <svg width="58" height="58" viewBox="0 0 58 58">
+            <circle cx="29" cy="29" r="25" fill="none" stroke="#aaa" stroke-width="2"/>
+            <text x="29" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#555" font-family="sans-serif">S/</text>
+            <path d="M8 29 Q8 10 29 10" stroke="#007932" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M50 29 Q50 48 29 48" stroke="#007932" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M5 26 L8 29 L11 26" fill="#007932"/><path d="M53 32 L50 29 L47 32" fill="#007932"/>
+          </svg>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-title">¡Baja tu cuota!</div>
+          <div class="ocard-desc">Reprograma tu préstamo y paga menos al mes</div>
+        </div>
+      </div>
+      <!-- Alivia tu pago -->
+      <div class="ocard" onclick="showT('¡Alivia tu pago!')">
+        <div class="ocard-img">
+          <svg width="58" height="58" viewBox="0 0 58 58">
+            <circle cx="29" cy="29" r="22" fill="none" stroke="#ddd" stroke-width="2"/>
+            <circle cx="29" cy="29" r="12" fill="none" stroke="#eee" stroke-width="1.5"/>
+            <path d="M29 7 A22 22 0 0 1 51 29 L29 29 Z" fill="#007932" opacity=".9"/>
+            <path d="M29 7 A22 22 0 1 0 51 29" fill="#007932" opacity=".15"/>
+          </svg>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-title">¡Alivia tu pago!</div>
+          <div class="ocard-desc">Parte tus compras en cuotas CMR</div>
+        </div>
+      </div>
+      <!-- Cuenta Sueldo -->
+      <div class="ocard" onclick="showT('Cuenta Sueldo')">
+        <div class="ocard-img">
+          <svg width="62" height="58" viewBox="0 0 62 58">
+            <rect x="14" y="28" width="34" height="20" rx="3" fill="none" stroke="#777" stroke-width="1.8"/>
+            <path d="M14 33 Q14 22 31 22 Q48 22 48 33" fill="none" stroke="#777" stroke-width="1.8"/>
+            <path d="M7 25 L18 20 L31 22 L44 17 L55 21" stroke="#007932" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="18" cy="20" r="2" fill="#007932"/><circle cx="31" cy="22" r="2" fill="#007932"/><circle cx="44" cy="17" r="2" fill="#007932"/>
+          </svg>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-title">Cuenta Sueldo</div>
+          <div class="badge-r">BENEFICIO EXCLUSIVO</div>
+          <div class="ocard-desc">Traslada tu sueldo y gana hasta S/1,000</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="div8"></div>
+
+    <!-- OPORTUNIDADES ÚNICAS -->
+    <div class="sechdr" style="padding-top:14px;">
+      <div class="sechdr-title">Oportunidades Únicas</div>
+    </div>
+    <div style="padding:0 14px 6px;font-size:14px;color:var(--lt);">Promociones</div>
+    <div class="orow">
+      <!-- Oportunidad única -->
+      <div class="ocard" onclick="showT('Promos de junio')">
+        <div class="ocard-img" style="background:#fff;">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <path d="M45 8 L72 30 L64 76 L26 76 L18 30 Z" fill="#e53935"/>
+            <text x="45" y="48" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="sans-serif">Oportunidad</text>
+            <text x="45" y="61" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-style="italic" font-family="sans-serif">única</text>
+          </svg>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-title">Promos de junio</div>
+          <div class="badge-g">RECOMENDADO</div>
+          <div class="ocard-desc">¡Hasta 50% DTO!</div>
+          <div class="ocard-date">Todos los días</div>
+        </div>
+      </div>
+      <!-- Tottus vino -->
+      <div class="ocard" onclick="showT('50% dto en Tottus')">
+        <div class="ocard-img" style="background:#f5ede0;font-size:48px;">🍷</div>
+        <div class="ocard-body">
+          <div class="ocard-title">50% dto en Tottus</div>
+          <div class="badge-g">RECOMENDADO</div>
+          <div class="ocard-desc">En el 2do vino importado</div>
+          <div class="ocard-date">Hoy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="div8"></div>
+
+    <!-- PROMOS FALABELLA.COM -->
+    <div style="padding:14px 14px 6px;display:flex;align-items:center;gap:7px;">
+      <span style="font-size:15px;font-weight:600;color:#111;">Promociones en Falabella.com</span>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    </div>
+    <div class="orow" style="padding-bottom:16px;">
+      <div class="ocard" onclick="showT('Televisor LG')">
+        <div class="ocard-img" style="background:#0b0b1a;font-size:44px;">📺</div>
+        <div class="ocard-body">
+          <div class="ocard-title">Televisor LG 75" NANO 4K</div>
+          <div class="ocard-desc">2026 · Smart TV AI</div>
+        </div>
+      </div>
+      <div class="ocard" onclick="showT('Cápsula Ballers')">
+        <div class="ocard-img" style="background:#e8f8ee;font-size:44px;">⚽</div>
+        <div class="ocard-body">
+          <div class="ocard-title">Cápsula Sorpresa Mu...</div>
+          <div class="ocard-desc">Ballers colección especial</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <div class="bn" onclick="goTo('transferir')">
+      <div class="bn-ic">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9l3 3-3 3"/>
+        </svg>
+      </div>
+      <div class="bn-lbl">Transferir</div>
+    </div>
+    <div class="bn" onclick="goTo('pagarcmr')">
+      <div class="bn-ic">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round">
+          <rect x="2" y="6" width="20" height="13" rx="2.5"/><path d="M2 10h20"/><rect x="5" y="14" width="3" height="2" rx=".5" fill="#888" stroke="none"/>
+        </svg>
+      </div>
+      <div class="bn-lbl">Pagar</div>
+    </div>
+    <div class="bn-mid">
+      <div class="qrbtn" onclick="showT('Escáner QR')">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/>
+          <rect x="4.5" y="4.5" width="4" height="4" rx=".5" fill="#fff" stroke="none"/>
+          <rect x="15.5" y="4.5" width="4" height="4" rx=".5" fill="#fff" stroke="none"/>
+          <rect x="4.5" y="15.5" width="4" height="4" rx=".5" fill="#fff" stroke="none"/>
+          <rect x="14" y="14" width="2.5" height="2.5" fill="#fff" stroke="none"/>
+          <rect x="18.5" y="14" width="2.5" height="2.5" fill="#fff" stroke="none"/>
+          <rect x="14" y="18.5" width="2.5" height="2.5" fill="#fff" stroke="none"/>
+          <rect x="18.5" y="18.5" width="2.5" height="2.5" fill="#fff" stroke="none"/>
+        </svg>
+      </div>
+    </div>
+    <div class="bn" onclick="goTo('notif')">
+      <div class="bn-ic">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
+      <div class="bn-lbl">Notificaciones</div>
+    </div>
+    <div class="bn" onclick="goTo('mas')">
+      <div class="bn-ic">
+        <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8" fill="#888"/><circle cx="12" cy="12" r="1.8" fill="#888"/><circle cx="19" cy="12" r="1.8" fill="#888"/></svg>
+      </div>
+      <div class="bn-lbl">Más</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TARJETA CMR DIGITAL ════════ -->
+<div class="screen" id="tarjeta">
+  <div class="bhdr dk">
+    <button class="back wh" onclick="goBack()">‹</button>
+    <div class="bhdr-title wh">Mi CMR Digital</div>
+    <div class="bhdr-r wh">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    </div>
+  </div>
+  <div class="sb">
+    <!-- Card hero dark bg -->
+    <div class="card-hero">
+      <div class="cmr-card">
+        <div class="cmr-card-row1">
+          <div class="cmr-cmr"><div class="cmr-cmr-txt">CMR</div><div class="cmr-cmr-sub">Banco Falabella</div></div>
+          <button class="mostrar-btn" onclick="showT('Mostrando datos')">Mostrar datos</button>
+        </div>
+        <div class="cmr-num">• • • • &nbsp; • • • • &nbsp; • • • • &nbsp; 1901</div>
+        <div class="cmr-card-row3">
+          <div>
+            <div class="cmr-field-lbl">Válida hasta &nbsp;&nbsp;&nbsp; Código CVV</div>
+            <div class="cmr-field-val">••/•• &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; •••</div>
+            <div class="cmr-name">PEDRO LUIS SILVA</div>
+          </div>
+          <div class="cmr-visa">VISA</div>
+        </div>
+      </div>
+    </div>
+    <!-- Actions dark bg -->
+    <div class="card-actions-bg">
+      <div class="ca-row">
+        <div class="ca-item" onclick="showT('Activar Pago NFC')">
+          <div class="ca-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.8">
+              <path d="M8 8.5a7.5 7.5 0 0 0 0 7"/><path d="M11.5 6a10.5 10.5 0 0 0 0 12"/><path d="M15 3.5a14 14 0 0 0 0 17"/><circle cx="3.5" cy="12" r="1.5" fill="rgba(255,255,255,.85)" stroke="none"/>
+            </svg>
+          </div>
+          <div class="ca-lbl">Activar Pago desde tu Celular</div>
+        </div>
+        <div class="ca-item" onclick="goTo('pagarcmr')">
+          <div class="ca-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round">
+              <rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><rect x="5" y="14" width="3" height="2" rx=".5" fill="rgba(255,255,255,.85)" stroke="none"/>
+            </svg>
+          </div>
+          <div class="ca-lbl">Pagar CMR</div>
+        </div>
+        <div class="ca-item" onclick="showT('Configurar CMR')">
+          <div class="ca-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round">
+              <rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/>
+              <circle cx="16" cy="15.5" r="2.3" stroke="rgba(255,255,255,.85)"/>
+              <path d="M16 13.2v-.5M16 17.8v-.5M13.7 15.5h-.5M18.8 15.5h.5"/>
+            </svg>
+            <div class="ca-dot"></div>
+          </div>
+          <div class="ca-lbl">Configurar CMR</div>
+        </div>
+        <div class="ca-item" onclick="showT('Más opciones')">
+          <div class="ca-circle">
+            <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8" fill="rgba(255,255,255,.8)"/><circle cx="12" cy="12" r="1.8" fill="rgba(255,255,255,.8)"/><circle cx="19" cy="12" r="1.8" fill="rgba(255,255,255,.8)"/></svg>
+          </div>
+          <div class="ca-lbl">Más opciones</div>
+        </div>
+      </div>
+    </div>
+    <!-- White balance section -->
+    <div style="background:#fff;border-radius:20px 20px 0 0;margin-top:-6px;position:relative;z-index:1;">
+      <div class="drag-handle"></div>
+      <div class="bal-row">
+        <div class="bal-col">
+          <div class="bal-col-lbl">Utilizado</div>
+          <div class="bal-col-val sh">S/ 10,277.44</div>
+        </div>
+        <div class="bal-col" style="text-align:right;">
+          <div class="bal-col-lbl">Disponible</div>
+          <div class="bal-col-val sh" style="color:var(--gd);">S/ 6,722.56</div>
+        </div>
+      </div>
+      <div class="bal-bar"><div class="bal-bar-fill" style="width:61%"></div></div>
+      <!-- Tabs -->
+      <div class="tabs-row">
+        <div class="tab on" id="t1" onclick="swTab('m')">Últimos movimientos</div>
+        <div class="tab" id="t2" onclick="swTab('f')">Movimientos facturados</div>
+      </div>
+      <!-- Movimientos -->
+      <div id="pm" class="movs">
+        <div class="mov-periodo"><span>Proxima facturación</span><strong>20/06/2026</strong></div>
+        <div class="mov-dg">Sábado 06 de junio</div>
+        <div class="mov-row" onclick="showT('Pago Mobile')">
+          <div class="mov-left"><div class="mov-desc">PAGO MOBILE</div></div>
+          <div class="mov-right"><div class="mov-amt g sh">S/ 619.76</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Viernes 22 de mayo</div>
+        <div class="mov-row" onclick="showT('SEG SEGURA')">
+          <div class="mov-left">
+            <div class="mov-desc">SEG SEGURA PACIFICO ESTABLECIMIENTO</div>
+            <div class="mov-sub">Monto total S/ 14.99 <span class="mov-sub-pencil">✏</span> Cuota 1/1</div>
+          </div>
+          <div class="mov-right"><div class="mov-amt k">S/ 14.99</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Viernes 08 de mayo</div>
+        <div class="mov-row" onclick="showT('DIFERIDA FALABELLA')">
+          <div class="mov-left">
+            <div class="mov-desc">DIFERIDA FALABELLA HUANCAYO</div>
+            <div class="mov-sub">Monto total S/ 2,178.00 <span class="mov-sub-pencil">✏</span> Cuota 1/36</div>
+          </div>
+          <div class="mov-right"><div class="mov-amt k">S/ 130.89</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-row" onclick="showT('DIFERIDA FALABELLA')">
+          <div class="mov-left">
+            <div class="mov-desc">DIFERIDA FALABELLA HUANCAYO</div>
+            <div class="mov-sub">Monto total S/ 4,658.00 <span class="mov-sub-pencil">✏</span> Cuota 1/36</div>
+          </div>
+          <div class="mov-right"><div class="mov-amt k">S/ 279.80</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Miércoles 06 de mayo</div>
+        <div class="mov-row" onclick="showT('RAPICASH')">
+          <div class="mov-left">
+            <div class="mov-desc">RAPICASH BANCA_INTERNET CUOTA Mobile</div>
+            <div class="mov-sub">Monto total S/ 10,000.00 · Cuota 2/36</div>
+          </div>
+          <div class="mov-right"><div class="mov-amt k">S/ 480.00</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div style="height:24px;"></div>
+      </div>
+      <div id="pf" class="movs" style="display:none;">
+        <div class="fact-bar">FACTURACIÓN 19/04 – 19/05</div>
+        <div class="mov-row"><div class="mov-left"><div class="mov-desc">TOTTUS CHORRILLOS</div><div class="mov-sub">Cuota 1/1</div></div><div class="mov-amt k">S/ 145.80</div></div>
+        <div class="mov-row"><div class="mov-left"><div class="mov-desc">NETFLIX.COM</div><div class="mov-sub">Cuota 1/1</div></div><div class="mov-amt k">S/ 35.90</div></div>
+        <div class="mov-row"><div class="mov-left"><div class="mov-desc">SAGA FALABELLA</div><div class="mov-sub">Cuota 2/6</div></div><div class="mov-amt k">S/ 38.33</div></div>
+        <div style="height:24px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CTA BANCO FALABELLA ═══════ -->
+<div class="screen" id="cuenta">
+  <div class="bhdr dk">
+    <button class="back wh" onclick="goBack()">‹</button>
+    <div class="bhdr-title wh">Cta Banco Falabella</div>
+    <div class="bhdr-r wh">
+      <svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.8" fill="rgba(255,255,255,.7)"/><circle cx="12" cy="12" r="1.8" fill="rgba(255,255,255,.7)"/><circle cx="12" cy="19" r="1.8" fill="rgba(255,255,255,.7)"/></svg>
+    </div>
+  </div>
+  <div class="sb">
+    <div class="cuenta-top">
+      <div class="cuenta-main-amt sh">S/ 2,087.95</div>
+      <div class="cuenta-main-lbl">Saldo disponible</div>
+    </div>
+    <div class="cuenta-2col">
+      <div><div class="c2-lbl">Saldo disponible</div><div class="c2-val sh">S/ 2,087.95</div></div>
+      <div><div class="c2-lbl">Saldo contable</div><div class="c2-val sh">S/ 2,087.95</div></div>
+    </div>
+    <div class="cci-block">
+      <div class="cci-lbl">CCI</div>
+      <div class="cci-val">05482882828028654793</div>
+    </div>
+    <div class="mov-section-hdr">ÚLTIMOS 30 MOVIMIENTOS</div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">06</div><div class="mc-month">Jun</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE SILVA-ROJAS-PEDRO</div></div>
+      <div class="mc-amt g sh">+ S/ 620.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo tarjeta')">
+      <div class="mc-date"><div class="mc-day">06</div><div class="mc-month">Jun</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO TARJETA CREDITO 1901 Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 619.76</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">03</div><div class="mc-month">Jun</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE PEDRO LUIS SILVA ROJAS</div></div>
+      <div class="mc-amt g sh">+ S/ 195.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">03</div><div class="mc-month">Jun</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE SILVA-ROJAS-PEDRO</div></div>
+      <div class="mc-amt g sh">+ S/ 884.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">03</div><div class="mc-month">Jun</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE PEDRO LUIS SILVA ROJAS</div></div>
+      <div class="mc-amt g sh">+ S/ 548.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cobro ITF')">
+      <div class="mc-date"><div class="mc-day">15</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">COBRO ITF</div></div>
+      <div class="mc-amt k">- S/ 0.10</div>
+    </div>
+    <div class="mc-row" onclick="showT('Abono Rapicash')">
+      <div class="mc-date"><div class="mc-day">06</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">ABONO POR RAPICASH 2050 Mobile</div></div>
+      <div class="mc-amt g sh">+ S/ 10,000.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Retiro efectivo')">
+      <div class="mc-date"><div class="mc-day">06</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">RETIRO EN EFECTIVO HUANCAYO EL TAMBO PER</div></div>
+      <div class="mc-amt k sh">- S/ 8,000.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia otro banco')">
+      <div class="mc-date"><div class="mc-day">06</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">TRANSFERENCIA OTRO BANCO Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 1,500.00</div>
+    </div>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- ═══════ PRÉSTAMO EFECTIVO ══════════ -->
+<div class="screen" id="prestamo">
+  <div class="bhdr wh">
+    <button class="back" onclick="goBack()">‹</button>
+    <div class="bhdr-title">Préstamo Efectivo</div>
+    <div class="bhdr-r">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    </div>
+  </div>
+  <div class="sb">
+    <div class="pre-card">
+      <div class="pre-type">PRÉSTAMO EFECTIVO</div>
+      <div class="pre-num">208885304637</div>
+      <div class="pre-2col">
+        <div><div class="pre-col-lbl">Fecha de pago</div><div class="pre-col-val">15/06/2026</div></div>
+        <div style="text-align:right;"><div class="pre-col-lbl">Monto que solicitaste</div><div class="pre-col-val sh">S/67,100.00</div></div>
+      </div>
+    </div>
+    <div class="pre-status">
+      <div class="pre-srow"><div class="pre-slbl">Cuota actual</div><div class="pre-sval">Nº 8 de 24</div></div>
+      <div class="pre-srow"><div class="pre-slbl">Monto cuota</div><div class="pre-sval sh">S/ 2,331.35</div></div>
+      <div class="pre-srow"><div class="pre-slbl">Capital</div><div class="pre-sval sh">S/ 907.35</div></div>
+      <div class="pre-srow"><div class="pre-slbl">Intereses</div><div class="pre-sval sh">S/ 1,290.85</div></div>
+      <div class="pre-srow"><div class="pre-slbl">Seguro Desgravamen</div><div class="pre-sval sh">S/ 133.15</div></div>
+      <div class="pre-srow"><div class="pre-slbl">Seguro Automotriz</div><div class="pre-sval">S/ 0.00</div></div>
+    </div>
+    <div class="pre-act">
+      <div class="pa-btn" onclick="goTo('pagarcredito')">
+        <div class="pa-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg></div>
+        <div class="pa-txt">Pagar cuota</div>
+      </div>
+      <div class="pa-btn" onclick="showT('Estado de cuenta')">
+        <div class="pa-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div>
+        <div class="pa-txt">Estado de cuenta</div>
+      </div>
+      <div class="pa-btn" onclick="showT('Reprogramar préstamo')">
+        <div class="pa-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg></div>
+        <div class="pa-txt">Reprogramar</div>
+      </div>
+      <div class="pa-btn" onclick="showT('Cronograma')">
+        <div class="pa-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div class="pa-txt">Cronograma</div>
+      </div>
+    </div>
+    <div class="sechdr" style="padding-top:6px;"><div class="sechdr-title">Detalle del préstamo</div></div>
+    <div class="pre-detail">
+      <div class="pdrow"><div class="pd-lbl">Nº crédito</div><div class="pd-val">208885304637</div></div>
+      <div class="pdrow"><div class="pd-lbl">Monto desembolsado</div><div class="pd-val sh">S/ 67,100.00</div></div>
+      <div class="pdrow"><div class="pd-lbl">Saldo pendiente</div><div class="pd-val sh">S/ 42,890.00</div></div>
+      <div class="pdrow"><div class="pd-lbl">Próx. vencimiento</div><div class="pd-val">15/06/2026</div></div>
+      <div class="pdrow"><div class="pd-lbl">TEA</div><div class="pd-val">24.5%</div></div>
+      <div class="pdrow"><div class="pd-lbl">TCEA</div><div class="pd-val">27.1%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAGAR CMR ═══════════════════ -->
+<div class="screen" id="pagarcmr">
+  <div class="bhdr wh">
+    <button class="back" onclick="goBack()">‹</button>
+    <div class="bhdr-title">Paga tu CMR</div>
+    <div class="bhdr-r" style="width:auto;gap:10px;display:flex;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span style="font-size:20px;cursor:pointer;" onclick="goBack()">✕</span>
+    </div>
+  </div>
+  <div class="sb">
+    <div class="pc-periodo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      <div class="pc-per-txt">Periodo de facturación del 19/04 al 19/05<strong>Último día de pago 15/06/2026</strong></div>
+    </div>
+    <div class="po on" id="po1" onclick="selP(1)">
+      <div><div class="po-lbl">Pago total del mes</div><div class="po-desc">Evita mora. Intereses en próx. meses.</div></div>
+      <div class="po-val">S/ 0</div>
+    </div>
+    <div class="po" id="po2" onclick="selP(2)">
+      <div><div class="po-lbl">Pago mínimo del mes</div></div>
+      <div style="font-size:17px;font-weight:700;color:#333;">S/ 0</div>
+    </div>
+    <div class="po" id="po3" onclick="selP(3)">
+      <div><div class="po-lbl">Otro monto</div></div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span style="font-size:16px;font-weight:600;color:#888;">S/</span>
+        <input type="number" value="0" onclick="event.stopPropagation()" style="width:80px;border:none;font-size:17px;font-weight:700;outline:none;text-align:right;background:transparent;color:#111;"/>
+      </div>
+    </div>
+    <div class="padbtm" style="padding-top:14px;">
+      <button class="btn-g-full" onclick="goBack();showT('Redirigiendo a pago...')">Ir a pagar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAGAR MI CRÉDITO ══════════ -->
+<div class="screen" id="pagarcredito">
+  <div class="prc-top">
+    <div class="prc-topbar">
+      <span class="prc-topbar-title">Pagar mi crédito</span>
+      <button class="prc-topbar-x" onclick="goBack()">✕</button>
+    </div>
+    <div class="prc-bag">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="rgba(255,255,255,.9)">
+        <path d="M20 6H4l1 14h14l1-14z"/><path d="M12 2a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4z" fill="rgba(255,255,255,.9)"/>
+        <text x="12" y="16" text-anchor="middle" font-size="7" font-weight="700" fill="#666" font-family="sans-serif">$</text>
+      </svg>
+    </div>
+    <div class="prc-monto sh">S/ 2,331.35</div>
+    <div class="prc-monto-lbl">Cuota a pagar</div>
+  </div>
+  <div class="sb">
+    <div class="prc-body">
+      <div class="prc-info">
+        <div class="prc-info-i">ℹ️</div>
+        <div class="prc-info-txt">El adelanto de cuota es una opción de pago que <strong>no reduce intereses, comisiones ni gastos</strong>. Si deseas hacer un prepago, puedes realizarlo ingresando <a href="#" style="color:var(--gd);" onclick="showT('Prepago');return false;">Aquí</a></div>
+      </div>
+      <div class="prc-rows">
+        <div class="prc-row"><div class="prc-lbl">Producto</div><div class="prc-val">Préstamo Efectivo</div></div>
+        <div class="prc-row"><div class="prc-lbl">Nº de crédito</div><div class="prc-val">208885304637</div></div>
+        <div class="prc-row"><div class="prc-lbl">Nº de cuota</div><div class="prc-val">8</div></div>
+        <div class="prc-row"><div class="prc-lbl">Fecha de vencimiento</div><div class="prc-val">2026-06-15</div></div>
+        <div class="prc-row"><div class="prc-lbl">Monto capital</div><div class="prc-val sh">S/ 907.35</div></div>
+        <div class="prc-row"><div class="prc-lbl">Monto intereses</div><div class="prc-val sh">S/ 1,290.85</div></div>
+        <div class="prc-row"><div class="prc-lbl">Seguro de Desgravamen</div><div class="prc-val sh">S/ 133.15</div></div>
+        <div class="prc-row"><div class="prc-lbl">Seguro Automotriz</div><div class="prc-val">S/ 0.00</div></div>
+        <div class="prc-row"><div class="prc-lbl">Monto cuota</div><div class="prc-val sh">S/ 2331.35</div></div>
+      </div>
+      <div class="prc-source" onclick="showT('Cambiar forma de pago')">
+        <div>
+          <div class="prc-src-name">Cta Banco Falabella</div>
+          <div class="prc-src-sub sh">828280286547 &nbsp;·&nbsp; S/ 2,087.95 Disponible</div>
+        </div>
+        <span style="font-size:20px;color:#ccc;">⌄</span>
+      </div>
+      <div style="padding-bottom:4px;font-size:13px;color:var(--lt);">Cambiar forma de pago</div>
+      <button class="btn-g-full" style="margin-top:10px;" onclick="showT('Procesando pago...');setTimeout(()=>goBack(),1500)">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TRANSFERIR ════════════════ -->
+<div class="screen" id="transferir">
+  <div class="bhdr wh">
+    <button class="back" onclick="goBack()">‹</button>
+    <div class="bhdr-title">Transferir</div>
+    <div class="bhdr-r"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+  </div>
+  <div class="sb">
+    <div class="tr-body">
+      <div class="tr-amtbox">
+        <div class="tr-amt-lbl">Monto a transferir</div>
+        <div class="tr-amt-val" id="trd">S/ 0.00</div>
+      </div>
+      <div class="tr-field"><label>Cuenta origen</label><select><option>Cta Banco Falabella · S/ 2,087.95</option><option>CMR VISA •••• 1901</option></select></div>
+      <div class="tr-field"><label>Banco destino</label><select><option>Banco Falabella</option><option>BCP</option><option>Interbank</option><option>BBVA</option><option>Scotiabank</option><option>Yape</option><option>Plin</option></select></div>
+      <div class="tr-field"><label>Número de cuenta / CCI</label><input type="tel" placeholder="Ingresa número de cuenta"/></div>
+      <div class="tr-field"><label>Monto (S/)</label><input type="number" placeholder="0.00" oninput="document.getElementById('trd').textContent='S/ '+(parseFloat(this.value)||0).toFixed(2)"/></div>
+      <div class="tr-field"><label>Concepto (opcional)</label><input type="text" placeholder="Ej: pago alquiler"/></div>
+      <button class="btn-g-full" onclick="showT('Transferencia enviada ✓')">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CMR PUNTOS ════════════════ -->
+<div class="screen" id="cmrpuntos">
+  <div class="bhdr dk">
+    <button class="back wh" onclick="goBack()">‹</button>
+    <div class="bhdr-title wh">CMR Puntos</div>
+    <div class="bhdr-r wh"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+  </div>
+  <div class="sb">
+    <!-- Promo banner -->
+    <div style="margin:16px;background:#fff;border-radius:16px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.07);">
+      <div style="background:linear-gradient(90deg,#e8f5e9,#f0faf0);height:120px;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;position:relative;">
+        <div style="text-align:center;font-size:13px;color:#555;">falabella.com</div>
+        <div style="text-align:center;font-size:13px;color:#555;">a1.com</div>
+        <div style="text-align:center;font-size:13px;color:#555;">Viajes</div>
+        <div style="position:absolute;top:10px;right:10px;border:2px solid var(--g);border-radius:50%;padding:4px;font-size:10px;font-weight:700;color:var(--g);">CMR<br>puntos</div>
+      </div>
+      <div style="padding:16px;text-align:center;">
+        <div style="font-size:17px;font-weight:700;margin-bottom:6px;">Paga menos en tus compras</div>
+        <div style="font-size:13px;color:var(--lt);margin-bottom:14px;">Usa tus CMR Puntos y ahorra desde hoy</div>
+        <button class="btn-g-full" style="width:auto;padding:10px 24px;" onclick="showT('Conoce más')">Conoce más aquí</button>
+      </div>
+    </div>
+    <!-- Mis CMR Puntos -->
+    <div style="margin:0 16px 14px;background:#fff;border-radius:16px;border:1px solid var(--border);padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.06);">
+      <div style="font-size:20px;font-weight:700;text-align:center;margin-bottom:14px;">Mis CMR Puntos</div>
+      <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:8px;">Acumulados este mes <svg style="vertical-align:middle;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px;">
+        <div style="font-size:14px;color:#888;margin-bottom:4px;">Junio 2026</div>
+        <div style="font-size:22px;font-weight:700;color:var(--gd);">72 pts</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f3f3f3;"><span style="font-size:13px;color:var(--lt);">Total acumulados</span><strong>2,972</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f3f3f3;"><span style="font-size:13px;color:var(--lt);">Por vencer</span><strong style="color:var(--red);">0</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;"><span style="font-size:13px;color:var(--lt);">Canjeados</span><strong>1,200</strong></div>
+    </div>
+    <div class="padbtm"><button class="btn-g-full" onclick="showT('Canjear puntos')">Canjear puntos</button></div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ═══════ NOTIFICACIONES ════════════ -->
+<div class="screen" id="notif">
+  <div class="bhdr wh">
+    <button class="back" onclick="goBack()">‹</button>
+    <div class="bhdr-title">Notificaciones</div>
+    <div class="bhdr-r" style="color:var(--g);font-weight:600;font-size:15px;" onclick="showT('Todas leídas')">✓</div>
+  </div>
+  <div class="sb">
+    <div class="ni"><div class="ni-dot"></div><div><div class="ni-title">Transferencia recibida</div><div class="ni-desc">Recibiste S/ 620.00 de SILVA-ROJAS-PEDRO</div><div class="ni-time">Hace 2 horas</div></div></div>
+    <div class="ni"><div class="ni-dot"></div><div><div class="ni-title">Tu cuota vence pronto</div><div class="ni-desc">Cuota Nº 8 Préstamo Efectivo vence 15/06/2026 por S/ 2,331.35</div><div class="ni-time">Hace 1 día</div></div></div>
+    <div class="ni"><div class="ni-dot r"></div><div><div class="ni-title">Pago de tarjeta exitoso</div><div class="ni-desc">Pago de S/ 619.76 a tu CMR 1901 realizado correctamente</div><div class="ni-time">Hace 2 días</div></div></div>
+    <div class="ni"><div class="ni-dot r"></div><div><div class="ni-title">50% de descuento en Tottus</div><div class="ni-desc">Aprovecha el 50% dto en el 2do vino importado. Solo hoy.</div><div class="ni-time">Hace 3 días</div></div></div>
+    <div class="ni"><div class="ni-dot r"></div><div><div class="ni-title">Actualización de la app</div><div class="ni-desc">App actualizada a la versión 2.78.0 con nuevas mejoras.</div><div class="ni-time">Hace 5 días</div></div></div>
+  </div>
+</div>
+
+<!-- ═══════ MÁS ════════════════════════ -->
+<div class="screen" id="mas">
+  <div class="bhdr wh">
+    <button class="back" onclick="goBack()">‹</button>
+    <div class="bhdr-title">Más opciones</div>
+  </div>
+  <div class="sb">
+    <div class="mi" onclick="goTo('cmrpuntos')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ffc107"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></div><div class="mi-t"><div class="mi-title">CMR Puntos</div><div class="mi-sub">2,972 puntos · Categoría Plata</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="showT('Mis Seguros')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mi-t"><div class="mi-title">Mis Seguros</div><div class="mi-sub">Seguro Desgravamen activo</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="showT('Depósito a plazo')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div class="mi-t"><div class="mi-title">Depósito a plazo</div><div class="mi-sub">Ahorra y gana intereses</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="showT('Documentos')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="mi-t"><div class="mi-title">Documentos y constancias</div><div class="mi-sub">Descarga tus documentos</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="showT('Perfil')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="mi-t"><div class="mi-title">Perfil de usuario</div><div class="mi-sub">Pedro Luis Silva Rojas</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="showT('Seguridad')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="mi-t"><div class="mi-title">Seguridad</div><div class="mi-sub">Contraseña, biométrico, PIN</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="showT('Ayuda')"><div class="mi-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="mi-t"><div class="mi-title">Ayuda y soporte</div><div class="mi-sub">Preguntas frecuentes</div></div><div class="mi-arr">›</div></div>
+    <div class="mi" onclick="doLogout()"><div class="mi-ic" style="background:#fff0f0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="1.8" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><div class="mi-t"><div class="mi-title" style="color:var(--red);">Cerrar sesión</div></div><div class="mi-arr">›</div></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+<script>
+const H=[];
+let sOk=true;
+
+function goTo(id){
+  const c=document.querySelector('.screen.active');
+  if(c){c.classList.remove('active');H.push(c.id);}
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  el.querySelector('.sb')?.scrollTo(0,0);
+}
+function goBack(){
+  const p=H.pop();if(!p)return;
+  document.querySelector('.screen.active')?.classList.remove('active');
+  document.getElementById(p).classList.add('active');
+}
+function doLogin(){
+  showT('Cargando...');
+  setTimeout(()=>{H.length=0;document.querySelector('.screen.active')?.classList.remove('active');document.getElementById('home').classList.add('active');},800);
+}
+function doLogout(){
+  H.length=0;document.querySelector('.screen.active')?.classList.remove('active');document.getElementById('login').classList.add('active');
+}
+function toggleS(){
+  sOk=!sOk;
+  document.querySelectorAll('.sh').forEach(el=>{
+    if(!el.dataset.r)el.dataset.r=el.textContent;
+    el.textContent=sOk?el.dataset.r:'••••••';
+  });
+  const ic=document.getElementById('eye-ic');
+  ic.innerHTML=sOk
+    ?'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+    :'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="1" y1="1" x2="23" y2="23" stroke="#888" stroke-width="2" stroke-linecap="round"/>';
+}
+function swTab(t){
+  document.getElementById('t1').classList.toggle('on',t==='m');
+  document.getElementById('t2').classList.toggle('on',t==='f');
+  document.getElementById('pm').style.display=t==='m'?'block':'none';
+  document.getElementById('pf').style.display=t==='f'?'block':'none';
+}
+function selP(n){
+  [1,2,3].forEach(i=>document.getElementById('po'+i).classList.toggle('on',i===n));
+}
+function showT(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('on'),2200);
+}
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('splash').classList.remove('active');
+    document.getElementById('login').classList.add('active');
+  },2000);
+});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
