@@ -543,7 +543,7 @@ html,body{height:100%;overflow:hidden;background:#fff;}
     <!-- MIS OFERTAS -->
     <div class="sechdr" style="padding-top:14px;">
       <div class="sechdr-title">Mis Ofertas</div>
-      <div class="sechdr-btn" onclick="showT('Todas las ofertas')">Revisar todos</div>
+      <div class="sechdr-btn" onclick="goTo('misofertastodas')">Revisar todos</div>
     </div>
     <div class="orow">
       <!-- Baja tu cuota -->
@@ -560,6 +560,22 @@ html,body{height:100%;overflow:hidden;background:#fff;}
         <div class="ocard-body">
           <div class="ocard-title">¡Baja tu cuota!</div>
           <div class="ocard-desc">Reprograma tu préstamo y paga menos al mes</div>
+        </div>
+      </div>
+      <!-- Invierte tu dinero -->
+      <div class="ocard" onclick="showT('Invierte tu dinero')">
+        <div class="ocard-img">
+          <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+            <circle cx="29" cy="34" rx="12" ry="12" stroke="#aaa" stroke-width="1.5" fill="none"/>
+            <text x="29" y="38" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">S/</text>
+            <path d="M29 22 L29 10M23 16 L29 10 L35 16" stroke="#aaa" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <path d="M18 28 L12 34M40 28 L46 34" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-title">Invierte tu dinero</div>
+          <div class="badge-r" style="background:#c0392b;">HASTA 4% TREA SOLES</div>
+          <div class="ocard-desc">Abre tu Depósito a Plazo y cumple tus metas</div>
         </div>
       </div>
       <!-- Alivia tu pago -->
@@ -833,10 +849,58 @@ html,body{height:100%;overflow:hidden;background:#fff;}
         <div style="height:24px;"></div>
       </div>
       <div id="pf" class="movs" style="display:none;">
-        <div class="fact-bar">FACTURACIÓN 19/04 – 19/05</div>
-        <div class="mov-row"><div class="mov-left"><div class="mov-desc">TOTTUS CHORRILLOS</div><div class="mov-sub">Cuota 1/1</div></div><div class="mov-amt k">S/ 145.80</div></div>
-        <div class="mov-row"><div class="mov-left"><div class="mov-desc">NETFLIX.COM</div><div class="mov-sub">Cuota 1/1</div></div><div class="mov-amt k">S/ 35.90</div></div>
-        <div class="mov-row"><div class="mov-left"><div class="mov-desc">SAGA FALABELLA</div><div class="mov-sub">Cuota 2/6</div></div><div class="mov-amt k">S/ 38.33</div></div>
+        <div class="mov-periodo"><span>Último día de pago</span><strong>15/06/2026</strong></div>
+        <div class="mov-periodo"><span>Total facturado del mes</span><strong>S/ 619.76</strong></div>
+        <div class="mov-periodo"><span>Pago mínimo</span><strong>S/ 619.76</strong></div>
+        <div class="mov-row" onclick="showT('FALABELLA HUANCAYO')">
+          <div class="mov-left"><div class="mov-desc">FALABELLA HUANCAYO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 0.99</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-row" onclick="showT('DIFERIDA FALABELLA HUANCAYO')">
+          <div class="mov-left"><div class="mov-desc">DIFERIDA FALABELLA HUANCAYO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 130.89</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-row" onclick="showT('DIFERIDA FALABELLA HUANCAYO')">
+          <div class="mov-left"><div class="mov-desc">DIFERIDA FALABELLA HUANCAYO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 279.80</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Miércoles 06 de mayo</div>
+        <div class="mov-row" onclick="showT('CUOTA RAPICASH')">
+          <div class="mov-left"><div class="mov-desc">CUOTA RAPICASH BANCA_INTERNET Mobile</div><div class="mov-sub">Monto total S/ 10,000.00 · Cuota 1/36</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 589.38</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-row" onclick="showT('ITF RETIRO Mobile')">
+          <div class="mov-left"><div class="mov-desc">ITF RETIRO Mobile</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 0.50</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Miércoles 22 de abril</div>
+        <div class="mov-row" onclick="showT('SEG SEGURA PACIFICO')">
+          <div class="mov-left"><div class="mov-desc">SEG SEGURA PACIFICO ESTABLECIMIENTO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 14.99</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Martes 19 de mayo</div>
+        <div class="mov-row" onclick="showT('SEGURO DESGRAVAMEN TC')">
+          <div class="mov-left"><div class="mov-desc">SEGURO DESGRAVAMEN TC</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 13.90</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Jueves 14 de mayo</div>
+        <div class="mov-row" onclick="showT('PAGO MOBILE')">
+          <div class="mov-left"><div class="mov-desc">PAGO MOBILE</div></div>
+          <div class="mov-right"><div class="mov-amt g sh">S/ 451.32</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-dg">Viernes 08 de mayo</div>
+        <div class="mov-row" onclick="showT('FALABELLA HUANCAYO')">
+          <div class="mov-left"><div class="mov-desc">FALABELLA HUANCAYO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 0.99</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-row" onclick="showT('DIFERIDA FALABELLA HUANCAYO')">
+          <div class="mov-left"><div class="mov-desc">DIFERIDA FALABELLA HUANCAYO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 130.89</div><div class="mov-chevron">›</div></div>
+        </div>
+        <div class="mov-row" onclick="showT('DIFERIDA FALABELLA HUANCAYO')">
+          <div class="mov-left"><div class="mov-desc">DIFERIDA FALABELLA HUANCAYO</div></div>
+          <div class="mov-right"><div class="mov-amt k">S/ 279.80</div><div class="mov-chevron">›</div></div>
+        </div>
         <div style="height:24px;"></div>
       </div>
     </div>
@@ -920,11 +984,219 @@ html,body{height:100%;overflow:hidden;background:#fff;}
       <div class="mc-desc"><div class="mc-title k">TRANSFERENCIA OTRO BANCO Mobile</div></div>
       <div class="mc-amt k sh">- S/ 1,500.00</div>
     </div>
+    <div class="mc-row" onclick="showT('Cobro ITF')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Abr</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">COBRO ITF</div></div>
+      <div class="mc-amt k">- S/ 0.10</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo pago crédito')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Abr</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO CREDITO Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 2,332.23</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo tarjeta 1901')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Abr</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO TARJETA CREDITO 1901 Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 183.04</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Abr</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE SILVA-ROJAS-PEDRO</div></div>
+      <div class="mc-amt g sh">+ S/ 3,000.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cobro ITF')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Mar</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">COBRO ITF</div></div>
+      <div class="mc-amt k">- S/ 0.10</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo pago crédito')">
+      <div class="mc-date"><div class="mc-day">15</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO CREDITO Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 2,331.35</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">15</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE SILVA-ROJAS-PEDRO</div></div>
+      <div class="mc-amt g sh">+ S/ 2,332.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo tarjeta 1901')">
+      <div class="mc-date"><div class="mc-day">14</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO TARJETA CREDITO 1901 Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 451.32</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia a Humberto')">
+      <div class="mc-date"><div class="mc-day">13</div><div class="mc-month">May</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">TRANSF. PARA HUMBERTO MIGUEL QUIJADA SOUZA</div></div>
+      <div class="mc-amt k sh">- S/ 80.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cobro ITF')">
+      <div class="mc-date"><div class="mc-day">17</div><div class="mc-month">Feb</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">COBRO ITF</div></div>
+      <div class="mc-amt k">- S/ 0.10</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo crédito')">
+      <div class="mc-date"><div class="mc-day">17</div><div class="mc-month">Feb</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO CREDITO Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 2,333.03</div>
+    </div>
+    <div class="mc-row" onclick="showT('Transferencia recibida')">
+      <div class="mc-date"><div class="mc-day">17</div><div class="mc-month">Feb</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">TRANSF. DE SILVA-ROJAS-PEDRO</div></div>
+      <div class="mc-amt g sh">+ S/ 2,333.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Abono Trans Interb')">
+      <div class="mc-date"><div class="mc-day">01</div><div class="mc-month">Feb</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">ABONO TRANS INTERB</div></div>
+      <div class="mc-amt g sh">+ S/ 2,331.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Abono Trans Interb')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Ene</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title g">ABONO TRANS INTERB</div></div>
+      <div class="mc-amt g sh">+ S/ 2,333.00</div>
+    </div>
+    <div class="mc-row" onclick="showT('Cargo crédito')">
+      <div class="mc-date"><div class="mc-day">16</div><div class="mc-month">Ene</div></div>
+      <div class="mc-divider"></div>
+      <div class="mc-desc"><div class="mc-title k">CARGO POR PAGO CREDITO Mobile</div></div>
+      <div class="mc-amt k sh">- S/ 2,332.17</div>
+    </div>
     <div style="height:24px;"></div>
   </div>
 </div>
 
-<!-- ═══════ PRÉSTAMO EFECTIVO ══════════ -->
+<!-- ═══════ MIS OFERTAS TODAS ══════════ -->
+<div class="screen" id="misofertastodas">
+  <div class="bhdr wh" style="justify-content:space-between;">
+    <div class="bhdr-title" style="text-align:left;flex:1;">Mis Ofertas</div>
+    <div class="bhdr-r" style="font-size:22px;cursor:pointer;" onclick="goBack()">✕</div>
+  </div>
+  <div class="sb">
+    <!-- Invierte tu dinero -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('Invierte tu dinero')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+          <circle cx="25" cy="30" r="12" stroke="#aaa" stroke-width="1.5" fill="none"/>
+          <text x="25" y="34" text-anchor="middle" font-size="9" fill="#555" font-family="sans-serif">S/</text>
+          <path d="M25 18 L25 6M19 12 L25 6 L31 12" stroke="#aaa" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M18 24 L12 30M32 24 L38 30" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Invierte tu dinero</div>
+        <div style="background:#c0392b;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:4px;text-transform:uppercase;">HASTA 4% TREA SOLES</div>
+        <div style="font-size:13px;color:#888;">Abre tu Depósito a Plazo y cumple tus metas</div>
+      </div>
+    </div>
+    <!-- Hasta S/20,000 -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('Hasta S/20,000!')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <path d="M24 8 C12 8 8 16 8 24 C8 32 12 40 24 40 C36 40 40 32 40 24 C40 16 36 8 24 8 Z" stroke="#aaa" stroke-width="1.5" fill="none"/>
+          <circle cx="24" cy="22" r="5" stroke="#007932" stroke-width="1.8" fill="none"/>
+          <path d="M21 19 L24 16 L27 19" stroke="#007932" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <path d="M20 28 L28 28" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">¡Hasta S/20,000!</div>
+        <div style="font-size:13px;color:#888;">De devolución con un Seguro de Vida</div>
+      </div>
+    </div>
+    <!-- Tus ahorros crecen -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('Tus ahorros crecen')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+          <path d="M10 34 Q14 26 20 28 Q24 30 26 24 Q30 14 36 18 Q40 22 42 20" stroke="#aaa" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="24" cy="36" rx="12" ry="8" stroke="#aaa" stroke-width="1.5" fill="none"/>
+          <circle cx="20" cy="14" r="4" stroke="#007932" stroke-width="1.8" fill="none"/>
+          <text x="20" y="17" text-anchor="middle" font-size="6" fill="#007932" font-family="sans-serif">S/</text>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Tus ahorros crecen</div>
+        <div style="font-size:13px;color:#888;">Abre aquí tu Cuenta Ahorro</div>
+      </div>
+    </div>
+    <!-- Yapea y Plinea -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('Yapea y Plinea')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+          <rect x="10" y="30" width="30" height="14" rx="2" stroke="#aaa" stroke-width="1.5" fill="none"/>
+          <path d="M14 30 L18 22 L22 26 L28 18 L32 22 L36 14" stroke="#aaa" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="25" y="40" text-anchor="middle" font-size="8" fill="#555" font-family="sans-serif">S/</text>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Yapea y Plinea</div>
+        <div style="background:#c0392b;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:4px;text-transform:uppercase;">GRATIS</div>
+        <div style="font-size:13px;color:#888;">Hazlo aquí con tu Cuenta Banco Falabella</div>
+      </div>
+    </div>
+    <!-- Traslada tu CTS -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('Traslada tu CTS')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+          <rect x="8" y="16" width="22" height="14" rx="2" stroke="#aaa" stroke-width="1.5" fill="none"/>
+          <text x="19" y="26" text-anchor="middle" font-size="8" fill="#555" font-family="sans-serif">S/</text>
+          <path d="M30 23 L42 23M36 18 L42 23 L36 28" stroke="#aaa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M10 34 C14 38 24 42 36 36" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Traslada tu CTS</div>
+        <div style="font-size:13px;color:#888;">Empieza a ahorrar más desde hoy</div>
+      </div>
+    </div>
+    <!-- Baja tu cuota -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('¡Baja tu cuota!')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <circle cx="25" cy="25" r="20" fill="none" stroke="#aaa" stroke-width="1.5"/>
+          <text x="25" y="29" text-anchor="middle" font-size="12" font-weight="700" fill="#555" font-family="sans-serif">S/</text>
+          <path d="M8 25 Q8 10 25 10" stroke="#007932" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M42 25 Q42 40 25 40" stroke="#007932" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M5 22 L8 25 L11 22" fill="#007932"/><path d="M45 28 L42 25 L39 28" fill="#007932"/>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">¡Baja tu cuota!</div>
+        <div style="font-size:13px;color:#888;">Reprograma tu préstamo y paga menos al mes</div>
+      </div>
+    </div>
+    <!-- Comparte beneficios -->
+    <div style="display:flex;align-items:center;padding:14px;border-bottom:1px solid #f3f3f3;cursor:pointer;" onclick="showT('Comparte beneficios')">
+      <div style="width:60px;height:60px;flex-shrink:0;margin-right:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+          <rect x="12" y="14" width="26" height="22" rx="3" stroke="#007932" stroke-width="1.8"/>
+          <text x="25" y="28" text-anchor="middle" font-size="10" font-weight="700" fill="#007932" font-family="sans-serif">CMR</text>
+          <circle cx="35" cy="14" r="6" fill="#007932"/>
+          <text x="35" y="17" text-anchor="middle" font-size="8" fill="#fff" font-family="sans-serif">+</text>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Comparte beneficios</div>
+        <div style="font-size:13px;color:#888;">Comparte tus beneficios con quien quieras</div>
+      </div>
+    </div>
+    <div style="height:24px;"></div>
+  </div>
+</div>
+
+<!-- ═══════ PRÉSTAMO EFECTIVO
 <div class="screen" id="prestamo">
   <div class="bhdr wh">
     <button class="back" onclick="goBack()">‹</button>
